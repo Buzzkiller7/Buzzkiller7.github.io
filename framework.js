@@ -24,6 +24,7 @@
   start=performance.now();nextStageAt=start+(manual?8000:4500);resume();
  }
  function setAxis(next){
+  if(!copy().axesCopy[next])return;
   axis=next;relation=null;const map=panel.querySelector('.axes-map');map.dataset.axis=axis;map.removeAttribute('data-relation');
   const a=copy().axesCopy[axis];document.getElementById('axis-label').textContent=a.label;document.getElementById('axis-title').textContent=a.title;document.getElementById('axis-description').textContent=a.text;
   document.getElementById('axis-terms').replaceChildren(...a.terms.map(t=>{const s=document.createElement('span');s.textContent=t;return s;}));
@@ -50,7 +51,7 @@
   if(visible&&!reduced.matches&&!document.hidden)raf=requestAnimationFrame(frame);else raf=0;
  }
  function resume(){if(!raf&&visible)raf=requestAnimationFrame(frame);}
- panel.addEventListener('click',e=>{const s=e.target.closest('[data-fw-stage]'),a=e.target.closest('button[data-axis]'),r=e.target.closest('button[data-relation]');if(s)setStage(Number(s.dataset.fwStage));if(a){window.URBAN_OBSERVATORY.setLens(a.dataset.axis);setAxis(a.dataset.axis);}if(r)setRelation(r.dataset.relation);});
+ panel.addEventListener('click',e=>{const s=e.target.closest('[data-fw-stage]'),a=e.target.closest('button[data-axis]'),r=e.target.closest('button[data-relation]');if(s)setStage(Number(s.dataset.fwStage));if(a){window.URBAN_OBSERVATORY.setLens(a.dataset.axis,false);setAxis(a.dataset.axis);}if(r)setRelation(r.dataset.relation);});
  panel.querySelectorAll('.system-node').forEach(b=>{b.addEventListener('pointerenter',()=>setStage(Number(b.dataset.fwStage)));b.addEventListener('focus',()=>setStage(Number(b.dataset.fwStage)));});
  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){nextStageAt=performance.now()+4500;resume();}},{threshold:.15}).observe(process);
  window.addEventListener('city-language',e=>translate(e.detail));window.addEventListener('city-lens',e=>setAxis(e.detail));

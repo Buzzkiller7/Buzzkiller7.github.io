@@ -7,7 +7,7 @@
   zh:{reuse:'复用',retrofit:'改造',expand:'扩建',dayCycle:'昼夜',zoomIn:'放大模型',zoomOut:'缩小模型',skip:'跳至当前研究问题',navResearch:'研究笔记',navAbout:'关于我',navContact:'联系',light:'台灯',greeting:'你好，我是杨晨。',headline1:'一座小小的城市，',headline2:'几个值得追问的问题。',welcome:'我研究城市如何变化、人的需求如何被回应，以及建成环境应如何适应未来。',hotspotSolar:'屋顶与基础设施',hotspotStreet:'建筑之间的生活',hotspotFuture:'下一步，怎样改变？',sceneLoading:'正在准备城市研究台…',followQuestion:'沿着这个问题探索',viewAssets:'城市资产',viewPeople:'人的需求',viewDecisions:'适应决策',playTour:'播放简短导览',pauseTour:'暂停导览',reset:'视角复位',cityMode:'城市模型',frameworkMode:'研究框架',openNote:'打开笔记',footerIdentity:'建筑学 / 城市分析 / 香港大学',close:'关闭笔记',next:'下一个研究视角',lampOn:'打开台灯',lampOff:'关闭台灯',all:'全部笔记',published:'已发表论文',working:'工作论文',researchTitle:'一些正在追问的问题。',researchIntro:'已发表论文、基金项目与正在推进的工作论文。',read:'打开笔记',readPaper:'阅读正式论文',aboutTitle:'关于我。',aboutIntro:'我是杨晨，目前就读于香港大学城市分析理学硕士项目，本科毕业于武汉大学建筑学专业。',aboutText:'我关注城市空间、变化中的人的需求与环境压力之间的关系，结合空间数据与计算模型，逐步走向基础设施适应与决策研究。',education:'教育背景',experience:'科研与实践经历',contactTitle:'期待交换一些想法。',contactText:'欢迎围绕城市研究、空间方法、能源与建成环境交流。',privacy:'本站不使用访问统计或追踪 Cookie。语言偏好仅保存在你的浏览器中；联系链接会打开邮件应用。',scope:'研究范围',question:'研究问题',approach:'研究方法',connection:'与长期方向的联系',futureTitle:'城市的下一步，应该怎么走？',futureIntro:'拟发展的研究方向，并非已完成的投资决策研究。',futureText:'技术、气候与需求不断变化，既有基础设施可能支撑新活动，也可能形成约束。我希望研究如何在不确定性下比较更新、复用、扩容与分阶段投资。',futureText2:'这连接两个兴趣：面向新增长需求的基础设施，以及既有建成环境的气候适应。',futureQuestion:'哪些能力需要改变，在哪里，何时？',futureMethods:'希望进一步发展的方法',futureMethodText:'情景分析、基础设施系统建模、经济评估与稳健决策。',back:'返回研究笔记',
    chapters:{assets:{label:'城市的物理基础',title:'我们已有的城市，\n能够承载什么？',text:'建筑与网络长期存在。它们的形态、容量和位置，塑造一座城市能够提供的机会。',related:['solar-morphology','gcn-lstm','urban-assets']},people:{label:'被人们使用的城市',title:'从人的需求出发，\n城市还缺少什么？',text:'街道也是一段旅程、一种环境暴露，以及某个人需要的服务。关注城市系统与人的需求之间的错配。',related:['heat-fire']},decisions:{label:'尚待改变的城市',title:'应该改变什么，\n又应该何时改变？',text:'复用、改造、扩建，还是等待？未来并不唯一，城市需要能够回应不确定性的选择。',related:[]}}}
  };
- let language=data.profile.languageDefault,lens='assets',mode='city',selection=null,light=true,tourTimer=null,tourActive=false,currentPage='research',currentProject=null,filter='all';
+ let language=data.profile.languageDefault,lens='base',mode='city',selection=null,light=true,tourTimer=null,tourActive=false,currentPage='research',currentProject=null,filter='all';
  const views=['assets','people','decisions'];
  const notebook=document.getElementById('notebook');
  const body=document.getElementById('notebook-body');
@@ -35,11 +35,19 @@
 
  function stopTour(){clearTimeout(tourTimer);tourTimer=null;tourActive=false;document.getElementById('tour-button').setAttribute('aria-pressed','false');document.getElementById('tour-symbol').textContent='▷';document.querySelector('[data-ui="playTour"]').textContent=c().playTour;}
  function setLens(next,user=true){
-  if(!views.includes(next))return;const changed=next!==lens;if(user){stopTour();clearSelection();}lens=next;document.documentElement.dataset.lens=lens;
-  const ch=c().chapters[lens];document.getElementById('chapter-number').textContent=['X','Y','Z'][views.indexOf(lens)];document.getElementById('chapter-label').textContent=ch.label;document.getElementById('chapter-title').textContent=ch.title;document.getElementById('chapter-description').textContent=ch.text;
+  if(next!=='base'&&!views.includes(next))return;
+  if(user&&next===lens)next='base';
+  const changed=next!==lens;if(user){stopTour();clearSelection();}
+  lens=next;document.documentElement.dataset.lens=lens;
+  const chapter=document.querySelector('.chapter'),skip=document.querySelector('.skip-link');chapter.hidden=lens==='base';
+  skip.href=lens==='base'?'#world':'#chapter-title';skip.textContent=lens==='base'?(language==='zh'?'跳至城市模型':'Skip to the city model'):c().skip;
+  if(lens!=='base'){
+   const ch=c().chapters[lens];document.getElementById('chapter-number').textContent=['X','Y','Z'][views.indexOf(lens)];document.getElementById('chapter-label').textContent=ch.label;document.getElementById('chapter-title').textContent=ch.title;document.getElementById('chapter-description').textContent=ch.text;
+  }
   document.querySelectorAll('[data-view]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===lens)));
   if(changed||user)window.dispatchEvent(new CustomEvent('city-lens',{detail:lens}));
  }
+
  function toggleTour(){
   if(tourActive){stopTour();return;}tourActive=true;document.getElementById('tour-button').setAttribute('aria-pressed','true');document.getElementById('tour-symbol').textContent='Ⅱ';document.querySelector('[data-ui="playTour"]').textContent=c().pauseTour;
   const frameworkTour=mode==='framework';if(frameworkTour){window.RESEARCH_FRAMEWORK?.setTab('process');window.RESEARCH_FRAMEWORK?.setStage(0);}else setLens('assets',false);let index=0;
