@@ -17,7 +17,6 @@
  function c(){return ui[language];}
 
  function clearSelection(){selection=null;document.documentElement.classList.remove('has-selection');document.getElementById('object-popover').hidden=true;window.dispatchEvent(new Event('city-clear-selection'));}
- function decisionTools(){document.getElementById('adapt-actions').hidden=lens!=='decisions';}
  function setMode(next){stopTour();clearSelection();mode=next;document.getElementById(next==='framework'?'framework-panel':'home').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth',block:'start'});window.dispatchEvent(new Event('city-mode'));}
 
  function showSelection(action,perform=true){
@@ -36,7 +35,7 @@
 
  function stopTour(){clearTimeout(tourTimer);tourTimer=null;tourActive=false;document.getElementById('tour-button').setAttribute('aria-pressed','false');document.getElementById('tour-symbol').textContent='▷';document.querySelector('[data-ui="playTour"]').textContent=c().playTour;}
  function setLens(next,user=true){
-  if(!views.includes(next))return;const changed=next!==lens;if(user){stopTour();clearSelection();}lens=next;document.documentElement.dataset.lens=lens;decisionTools();
+  if(!views.includes(next))return;const changed=next!==lens;if(user){stopTour();clearSelection();}lens=next;document.documentElement.dataset.lens=lens;
   const ch=c().chapters[lens];document.getElementById('chapter-number').textContent=['X','Y','Z'][views.indexOf(lens)];document.getElementById('chapter-label').textContent=ch.label;document.getElementById('chapter-title').textContent=ch.title;document.getElementById('chapter-description').textContent=ch.text;
   document.querySelectorAll('[data-view]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===lens)));
   if(changed||user)window.dispatchEvent(new CustomEvent('city-lens',{detail:lens}));
@@ -106,7 +105,6 @@
  document.getElementById('reset-camera').addEventListener('click',()=>window.dispatchEvent(new Event('city-reset')));
  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
  window.addEventListener('city-fallback',()=>setMode('framework'));
- document.querySelectorAll('[data-adapt]').forEach(b=>b.addEventListener('click',()=>showSelection({action:'adapt',id:b.dataset.adapt,lens:'decisions',key:'adapt-'+b.dataset.adapt})));
  window.addEventListener('city-object',e=>showSelection(e.detail));window.addEventListener('city-clear',()=>clearSelection());
  document.addEventListener('keydown',e=>{if(notebook.open||e.altKey||e.ctrlKey||e.metaKey||e.target.closest('input,textarea,select'))return;if(e.key==='Escape')clearSelection();if(['1','2','3'].includes(e.key))setLens(views[Number(e.key)-1]);});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTour();});
