@@ -114,6 +114,60 @@ html{scroll-behavior:smooth;scroll-padding-top:24px}.framework-story{position:re
 
 @media(min-width:701px){
  .world{left:0;right:0}
- .world #city-canvas{clip-path:polygon(var(--scene-gutter,25%) 0,100% 0,100% 100%,0 100%,0 var(--scene-text-cut,220px),var(--scene-gutter,25%) var(--scene-text-cut,220px))}
+ .world #city-canvas,.world #illustrated-story{clip-path:none;mask-image:radial-gradient(ellipse 40% 60% at left top,transparent 28%,#000 92%),linear-gradient(transparent,#000 7%,#000 91%,transparent);mask-composite:intersect}
  .has-selection .world #city-canvas{clip-path:inset(0 0 0 var(--scene-gutter,25%))}
 }
+.lens-annotations{opacity:var(--survey-reveal,1)}
+
+#illustrated-story{position:absolute;inset:96px 0 0;width:100%;height:calc(100% - 96px);z-index:1;opacity:0;pointer-events:none;cursor:default}
+.scene-tools,.lens-annotations{z-index:2}
+
+.illustration-loading #city-canvas{opacity:0}
+
+.illustrated-idle .scene-tools,.illustrated-idle #lamp-button{visibility:hidden;pointer-events:none}
+
+@font-face{font-family:InstrumentSerif;src:url('assets/fonts/InstrumentSerif-Regular.ttf?v=56ac3be03ac3') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:NotebookSong;src:url('assets/fonts/NotoSerifSC-subset.ttf?v=21b309b59287') format('truetype');font-weight:400 600;font-style:normal;font-display:swap}
+.notebook{--folio:#f1ebdf;--folio-ink:#37372f;--folio-muted:#706a5e;--folio-gold:#8a7050;--folio-rule:#b6a38352;inset:20px 20px 20px auto;width:min(600px,calc(100% - 40px));height:calc(100dvh - 40px);border:1px solid #c3b492;border-radius:8px;background:var(--folio);color:var(--folio-ink);box-shadow:-16px 8px 72px #17100c4a;scrollbar-width:thin;scrollbar-color:#bdb09a transparent}
+.notebook::backdrop{background:#1816136b;backdrop-filter:blur(5px)}
+.notebook-top{padding:20px 32px 16px;background:var(--folio);border-bottom:1px solid var(--folio-rule);gap:12px}
+.notebook-top p{font-family:Manrope,"Noto Sans SC",sans-serif;font-size:11px;line-height:20px;letter-spacing:.1em;color:var(--folio-gold);font-weight:500}
+.close-notebook,.notebook-back{flex-shrink:0;display:grid;place-items:center;width:44px;height:44px;background:transparent;border:1px solid transparent;color:#827259;border-radius:50%;font-weight:400}
+.close-notebook{font-family:InstrumentSerif,serif;font-size:28px;line-height:1}
+.close-notebook:hover,.notebook-back:hover{color:#504633;background:#e8dfce;border-color:#bfaa824a;transform:none}
+.notebook-body{padding:36px 48px 56px}
+.notebook :is(h2,h3,h4){font-family:InstrumentSerif,NotebookSong,"Songti SC",serif;font-weight:400;letter-spacing:-.015em;color:var(--folio-ink)}
+.notebook h2{font-size:48px;line-height:1.12;margin:4px 0 28px;text-wrap:balance;max-width:470px}
+.notebook h3{font-size:26px;line-height:1.3;margin-bottom:16px;letter-spacing:0;text-wrap:pretty}
+.notebook h4{font-size:22px;line-height:1.4;margin-bottom:8px}
+.notebook p{font-size:14px;line-height:1.95;color:var(--folio-muted)}
+.notebook p+p{margin-top:16px}
+.notebook .note-intro{margin-bottom:28px;color:#686358;max-width:46ch}
+.notebook .note-meta,.notebook .date{font-family:Manrope,"Noto Sans SC",sans-serif;font-size:11px!important;line-height:20px!important;letter-spacing:.045em;font-variant-numeric:tabular-nums;color:var(--folio-gold)!important;margin-bottom:12px}
+.note-entry{padding:28px 0 24px;border-top:1px solid var(--folio-rule)}
+.note-entry h3{margin-bottom:12px}
+.note-entry>p{font-size:13px;line-height:1.9}
+.note-filter{gap:24px;margin:0 0 8px;border-bottom:1px solid var(--folio-rule)}
+.note-filter button{padding:12px 0;min-height:44px;border-radius:0;background:transparent;color:#938977;font-size:12px;line-height:20px;border-bottom:1px solid transparent}
+.note-filter button[aria-pressed=true]{background:transparent;color:#5f503b;border-bottom-color:#92754e}
+.note-filter button:hover{color:#5f503b;background:transparent}
+.note-open,.note-paper{font-size:12px;line-height:20px;letter-spacing:.045em;font-weight:500;color:var(--folio-gold);padding:6px 0;margin-top:16px}
+.note-open:hover,.note-paper:hover{color:#4b3e2a;transform:translateX(3px)}
+.note-open img,.note-paper img{width:14px;height:14px;opacity:.64}
+.note-section{margin-top:36px}
+.note-section>h3{color:#5b584b}
+.notebook .note-authors{font-size:11px!important;line-height:1.8!important;color:#8a8170!important;letter-spacing:.02em}
+.notebook .note-scope{margin-top:32px;padding:18px 20px;background:#e8e1d3;border:1px solid #c8bca23d;border-radius:4px;font-size:12px!important;line-height:1.85!important;color:#827867!important}
+.note-scope strong{font-weight:500;color:#655b49}
+.note-education{padding:22px 0;border-top:1px solid var(--folio-rule)}
+.note-education h3{font-size:25px;margin-bottom:8px}
+.experience-entry{padding:24px 0;border-top:1px solid var(--folio-rule)}
+.experience-entry .description{font-size:13px;line-height:1.9;color:#827868;margin-top:12px}
+.notebook a:focus-visible,.notebook button:focus-visible{outline-color:#9d845b;outline-width:1px}
+html[lang^=zh] .notebook h2{font-family:NotebookSong,"Songti SC",serif;font-size:32px;line-height:1.55;letter-spacing:.035em}
+html[lang^=zh] .notebook h3{font-family:NotebookSong,"Songti SC",serif;font-size:22px;line-height:1.7;letter-spacing:.02em}
+html[lang^=zh] .notebook h4{font-family:NotebookSong,"Songti SC",serif;font-size:19px;line-height:1.65;letter-spacing:.02em}
+html[lang^=zh] .notebook p{letter-spacing:.015em}
+@media(max-width:700px){.notebook{inset:12px;width:calc(100% - 24px);height:calc(100dvh - 24px);border-radius:8px}.notebook-top{padding:12px 16px}.notebook-body{padding:24px 24px 40px}.notebook h2{font-size:40px}.notebook h3{font-size:24px}.note-filter{gap:20px}html[lang^=zh] .notebook h2{font-size:28px;line-height:1.55}html[lang^=zh] .notebook h3{font-size:20px}}
+
+.notebook[open]{animation:folio-enter .6s var(--ease) both}.notebook[open]::backdrop{animation:folio-dim .6s var(--ease) both}@keyframes folio-enter{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:translateX(0)}}@keyframes folio-dim{from{opacity:0}to{opacity:1}}@media(prefers-reduced-motion:reduce){.notebook[open],.notebook[open]::backdrop{animation:none}}

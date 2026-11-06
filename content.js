@@ -393,12 +393,12 @@ window.SITE_DATA = {
       "date": "2022 — 2025",
       "en": {
         "org": "Wuhan University, School of Urban Design",
-        "role": "Research group member, Prof. Zhonghua Gou’s team",
+        "role": "Research group member",
         "text": "Research on photovoltaics, building energy consumption and carbon emissions."
       },
       "zh": {
         "org": "武汉大学城市设计学院",
-        "role": "苟中华教授课题组成员",
+        "role": "教授课题组成员",
         "text": "参与光伏、建筑能耗与碳排放等方向的研究。"
       }
     },
