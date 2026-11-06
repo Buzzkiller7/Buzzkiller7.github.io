@@ -45,7 +45,7 @@
    const ch=c().chapters[lens];document.getElementById('chapter-number').textContent=['X','Y','Z'][views.indexOf(lens)];document.getElementById('chapter-label').textContent=ch.label;document.getElementById('chapter-title').textContent=ch.title;document.getElementById('chapter-description').textContent=ch.text;
   }
   document.querySelectorAll('[data-view]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.view===lens)));
-  if(changed||user)window.dispatchEvent(new CustomEvent('city-lens',{detail:lens}));
+  if(changed||user){window.dispatchEvent(new CustomEvent('city-lens',{detail:lens}));window.dispatchEvent(new CustomEvent('city-presentation',{detail:'model'}));}
  }
 
  function toggleTour(){
@@ -113,7 +113,8 @@
  document.getElementById('reset-camera').addEventListener('click',()=>window.dispatchEvent(new Event('city-reset')));
  document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
  window.addEventListener('city-fallback',()=>setMode('framework'));
- window.addEventListener('city-scene-return',e=>{if(!['solar','networks','capacity','movement','shade','access','reuse','retrofit','expand'].includes(e.detail?.id))return;stopTour();clearSelection();setLens('base',false);});
+ window.addEventListener('city-scene-return',e=>{if(!['solar','networks','capacity','movement','shade','access','reuse','retrofit','expand'].includes(e.detail?.id))return;stopTour();clearSelection();setLens('base',false);window.dispatchEvent(new CustomEvent('city-presentation',{detail:'illustration'}));});
+ window.addEventListener('city-model-idle',()=>{stopTour();clearSelection();setLens('base',false);window.dispatchEvent(new CustomEvent('city-presentation',{detail:'model'}));});
  window.addEventListener('city-object',e=>showSelection(e.detail));window.addEventListener('city-clear',()=>clearSelection());
  document.addEventListener('keydown',e=>{if(notebook.open||e.altKey||e.ctrlKey||e.metaKey||e.target.closest('input,textarea,select'))return;if(e.key==='Escape')clearSelection();if(['1','2','3'].includes(e.key))setLens(views[Number(e.key)-1]);});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)stopTour();});
